@@ -1,0 +1,127 @@
+Start testing: Nov 20 22:09 India Standard Time
+----------------------------------------------------------
+1/1 Testing: genome_tests
+1/1 Test: genome_tests
+Command: "D:/GenomeToolkit_C17_Starter/build-alignment/genome_tests.exe"
+Directory: D:/GenomeToolkit_C17_Starter
+"genome_tests" start time: Nov 20 22:09 India Standard Time
+Output:
+----------------------------------------------------------
+PASS: divide-and-conquer maximum subarray
+PASS: dynamic programming 0/1 knapsack
+PASS: 0/1 knapsack selection reconstruction
+PASS: dynamic programming longest common subsequence
+PASS: LCS input and allocation validation
+PASS: Needleman-Wunsch global DNA alignment
+PASS: Smith-Waterman local DNA alignment
+PASS: DNA alignment validation and overflow
+PASS: dynamic programming matrix chain multiplication
+PASS: dynamic programming optimal binary search tree
+PASS: optimal binary search tree validation
+PASS: dynamic programming Bellman-Ford shortest paths
+PASS: Bellman-Ford negative cycle detection
+PASS: Bellman-Ford validation and result reuse
+PASS: dynamic programming Floyd-Warshall paths
+PASS: Floyd-Warshall negative cycle detection
+PASS: Floyd-Warshall validation and result reuse
+PASS: Bellman-Ford and Floyd-Warshall agreement
+PASS: dynamic programming TSP bitmask examples
+PASS: TSP no-tour and maximum-size cases
+PASS: TSP validation and result reuse
+PASS: backtracking Sum of Subsets
+PASS: backtracking 0/1 Knapsack
+PASS: FIFO Branch and Bound 0/1 Knapsack
+PASS: LIFO Branch and Bound 0/1 Knapsack
+PASS: Least-Cost Branch and Bound 0/1 Knapsack
+PASS: Knapsack algorithm agreement
+PASS: Ford-Fulkerson textbook and flow cases
+PASS: Ford-Fulkerson reverse residual adjustment
+PASS: Ford-Fulkerson validation and overflow
+PASS: maximum bipartite matching examples
+PASS: bipartite matching validation
+PASS: bipartite matching brute-force agreement
+PASS: naive string matching
+PASS: Rabin-Karp collision and rolling hash
+PASS: KMP prefix and overlap cases
+PASS: finite-automaton byte matching
+PASS: string matching cross-validation
+PASS: exponentiation by squaring
+PASS: celebrity identification
+PASS: classical rectangular matrix multiplication
+PASS: Strassen matrix multiplication
+PASS: merge sort by sequence length
+PASS: merge sort by identifier
+PASS: quick sort by sequence length
+PASS: quick sort by identifier
+PASS: iterative binary search by length
+PASS: iterative binary search by identifier
+PASS: recursive binary search by length
+PASS: recursive binary search by identifier
+PASS: valid sequences
+PASS: uppercase sequence
+PASS: lowercase sequence
+PASS: single nucleotide
+PASS: invalid DNA characters
+PASS: empty DNA sequence
+PASS: NULL DNA input
+PASS: sequence creation and destruction
+PASS: creation into occupied structure
+PASS: invalid identifier
+PASS: invalid sequence creation
+PASS: FASTA single record
+PASS: FASTA multiple records
+PASS: FASTA multiline sequence
+PASS: FASTA invalid DNA
+PASS: FASTA data before header
+PASS: FASTA empty identifier
+PASS: FASTA whitespace-only identifier
+PASS: FASTA embedded NULL byte
+PASS: FASTA empty sequence
+PASS: FASTA empty file
+PASS: FASTA missing file
+PASS: FASTA NULL output parameters
+PASS: FASTA CRLF line endings
+PASS: FASTA long sequence
+PASS: greedy activity selection
+PASS: greedy fractional knapsack
+PASS: greedy Huffman coding
+PASS: greedy Huffman input validation
+PASS: greedy Huffman edge cases
+PASS: greedy Dijkstra shortest paths
+PASS: Dijkstra result reuse and failure preservation
+PASS: greedy Prim minimum spanning tree
+PASS: Prim result reuse and failure preservation
+PASS: Prim negative edge weights
+PASS: Prim zero-weight edges
+PASS: Prim disconnected graph
+PASS: Prim invalid adjacency matrices
+PASS: greedy invalid input validation
+PASS: Kruskal connected graph
+PASS: Kruskal disconnected graph
+PASS: Kruskal negative edge weights
+PASS: Kruskal duplicate edges
+PASS: Kruskal self-loops
+PASS: Kruskal single vertex
+PASS: Kruskal empty graph
+PASS: Kruskal invalid input
+PASS: Kruskal result reuse and failure preservation
+PASS: Kruskal and Prim weight agreement
+PASS: Prim and Kruskal negative-weight agreement
+PASS: sequence statistics and GC percentage
+PASS: benchmark measurement and verification
+PASS: verified multi-algorithm benchmark suite
+PASS: CSV and JSON result exports
+PASS: interactive CLI end-to-end workflows
+PASS: normal-operation CLI demonstration
+PASS: constraint-shock CLI demonstration
+PASS: large-data stress CLI demonstration
+All 108 tests passed.
+<end of output>
+Test time =   0.40 sec
+----------------------------------------------------------
+Test Passed.
+"genome_tests" end time: Nov 20 22:09 India Standard Time
+"genome_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 20 22:09 India Standard Time

@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/GenomeToolkit_C17_Starter/build-alignment/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

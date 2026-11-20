@@ -1,0 +1,6 @@
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/genome_core.dir
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/genome_tool.dir
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/genome_tests.dir
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/test.dir
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/edit_cache.dir
+D:/GenomeToolkit_C17_Starter/build-alignment/CMakeFiles/rebuild_cache.dir
