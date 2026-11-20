@@ -17,7 +17,7 @@ reconfiguring it with MinGW.
 
 ## Navigate the CLI
 
-The main menu numbers its 12 project modules as `[01]` through `[12]`;
+The main menu numbers its 11 project modules as `[01]` through `[11]`;
 `[00]` requests application exit and asks for confirmation. Each module has
 its own formatted submenu. Choose `[01]` there to run its existing workflow
 or `[00]` to return to the main menu. Invalid selections show an error and
@@ -29,7 +29,7 @@ disabled when `NO_COLOR` is set or the terminal reports `TERM=dumb`.
 
 ## Run a DNA alignment
 
-In the main menu, choose **[12] DNA Sequence Alignment**, then select:
+In the main menu, choose **[11] DNA Sequence Alignment**, then select:
 
 - **[01] Needleman-Wunsch** to align both complete sequences.
 - **[02] Smith-Waterman** to find their best-scoring matching region.

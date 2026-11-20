@@ -6,14 +6,13 @@
 “This is the Genome Sequence Search and Alignment Toolkit. It is implemented
 in standard C17 and groups the algorithms behind reusable headers and
 functions. The command-line menu connects the existing algorithm milestones
-to FASTA input, deterministic demonstrations, benchmarks, and exported
-results.”
+to FASTA input, deterministic demonstrations, and benchmarks.”
 
 **Normal operation (45 seconds)**  
 Run `scripts\run_demos.ps1` or `genome_tool.exe --demo normal`. Point out the
 loaded sample FASTA sequences, base counts and GC percentage, ordering by
-length, and the agreement between Naive, Rabin–Karp, and KMP. Show the
-generated sequence-statistics and algorithm-comparison CSV/JSON files.
+length, and the agreement between Naive, Rabin–Karp, KMP, and finite-automaton
+matching.
 
 **Constraint shock (35 seconds)**  
 Run `genome_tool.exe --demo shock`. The same 0/1 Knapsack instance is solved
@@ -25,9 +24,9 @@ the optimal value.
 Run `genome_tool.exe --demo stress`. It creates a deterministic 1,000,000-byte
 DNA text and 512 synthetic sequences, searches three patterns with all three
 string matchers, checks each output against Naive matching, times the
-operations, and sorts the sequence collection. The nine measured search
-records are exported. Explain that elapsed times are observations, not
-proofs of asymptotic complexity.
+operations, and sorts the sequence collection. The twelve verified search
+timings are printed. Explain that elapsed times are observations, not proofs
+of asymptotic complexity.
 
 **Complexity theory (60 seconds)**  
 “P is the class of decision problems solvable in polynomial time. NP is the

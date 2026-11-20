@@ -5,7 +5,6 @@
 - `algorithms`: sorting and searching DNA sequence records.
 - `sequence`: DNA sequence statistics.
 - `benchmark`: repeatable measurements with correctness verification.
-- `export`: streaming CSV/JSON result export.
 - `cli` and `main.c`: interactive command-line entry point and demos.
 - `tests`: automated tests.
 
@@ -1084,9 +1083,9 @@ and transitions after a full match preserve overlaps.
 ## Milestone 8 integration
 
 The reusable integration modules are `include/genome/sequence/sequence_statistics.h`,
-`include/genome/benchmark/benchmark.h`, `include/genome/export/result_export.h`,
-and `include/genome/cli/cli.h`, implemented under the matching `src/`
-directories. The C17 command-line entry point in `src/main.c` supports the
+`include/genome/benchmark/benchmark.h`, and `include/genome/cli/cli.h`,
+implemented under the matching `src/` directories. The C17 command-line entry
+point in `src/main.c` supports the
 interactive menu, `--demo normal|shock|stress`, `--benchmark`, and the legacy
 `genome_tool <input.fasta>` form.
 
@@ -1132,15 +1131,6 @@ preparation, result validation, and cleanup are not included in each
 algorithm's timed interval. All temporary inputs and returned algorithm
 results are released by the benchmark module.
 
-### CSV and JSON output
-
-The exporters write sequence statistics, benchmark records, and
-algorithm-comparison records using streaming `FILE` output. They validate
-record pointers and numeric values, escape CSV quoting and JSON strings, and
-report open/write/close failures. They own no caller data and do not retain
-file handles. Export filenames are selected by the user or by a named demo;
-the menu does not silently choose an output directory.
-
 ### Interactive menu and demonstrations
 
 The menu is driven by caller-supplied `FILE` streams through
@@ -1150,26 +1140,24 @@ choices, gives FASTA records and result buffers explicit cleanup, and returns
 success/failure to `main`. Menu categories include DNA statistics, FASTA
 display, sorting/searching, representative divide-and-conquer and greedy
 examples, LCS, a comparison of the Knapsack solvers, maximum flow,
-byte-string matching, benchmarks, and export.
+byte-string matching, and benchmarks.
 
 `genome_cli_run_demo` implements three fixed scenarios:
 
 1. **Normal operation:** read `data/samples/demo.fasta`, print sequence
-   statistics, sort records, compare all four string matchers, and export
-   sequence and comparison results.
+   statistics, sort records, and display all four string-matcher results.
 2. **Constraint shock:** solve the same 0/1 Knapsack instance under two
    capacities and show how the optimum changes.
 3. **Large-data stress:** generate a deterministic one-million-byte text and
    512 synthetic sequences, compare four matchers on three patterns, time and
    verify all twelve searches against Naive, sort the sequence collection, and
-   export the benchmark records. A fixed LCG seed makes the data reproducible.
+   display the verified timings. A fixed LCG seed makes the data reproducible.
 
 The stress demonstration reports an estimated input/sequence payload
 (excluding matcher workspace and allocator overhead) and measured times.
 These observations are not memory profiling or asymptotic proofs. The
 PowerShell runner `scripts/run_demos.ps1` runs all three scenarios from the
-repository root. Scenario-generated CSV/JSON files are written in the current
-working directory and can be removed or retained by the user.
+repository root.
 
 ### Complexity theory and alignment scope
 

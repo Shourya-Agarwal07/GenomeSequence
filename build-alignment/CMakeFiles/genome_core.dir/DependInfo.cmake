@@ -20,7 +20,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "D:/GenomeToolkit_C17_Starter/src/benchmark/benchmark.c" "CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.obj.d"
   "D:/GenomeToolkit_C17_Starter/src/cli/cli.c" "CMakeFiles/genome_core.dir/src/cli/cli.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/cli/cli.c.obj.d"
   "D:/GenomeToolkit_C17_Starter/src/domain/dna_sequence.c" "CMakeFiles/genome_core.dir/src/domain/dna_sequence.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/domain/dna_sequence.c.obj.d"
-  "D:/GenomeToolkit_C17_Starter/src/export/result_export.c" "CMakeFiles/genome_core.dir/src/export/result_export.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/export/result_export.c.obj.d"
   "D:/GenomeToolkit_C17_Starter/src/graph/bipartite_matching.c" "CMakeFiles/genome_core.dir/src/graph/bipartite_matching.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/graph/bipartite_matching.c.obj.d"
   "D:/GenomeToolkit_C17_Starter/src/graph/ford_fulkerson.c" "CMakeFiles/genome_core.dir/src/graph/ford_fulkerson.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/graph/ford_fulkerson.c.obj.d"
   "D:/GenomeToolkit_C17_Starter/src/io/fasta_reader.c" "CMakeFiles/genome_core.dir/src/io/fasta_reader.c.obj" "gcc" "CMakeFiles/genome_core.dir/src/io/fasta_reader.c.obj.d"

@@ -210,14 +210,11 @@ to the total number of returned indices.
   dataset. Report input size and solution quality where applicable, plus
   memory usage with measured memory clearly distinguished from estimates.
   Timings are measurements, not hard-coded pass/fail thresholds.
-- Export sequence statistics, benchmark records, and algorithm comparisons
-  to CSV and JSON. Escape fields correctly, stream output, validate inputs,
-  and report file I/O failures.
 - Include three reproducible demos: normal FASTA/statistics/matching
   operations; a 0/1 Knapsack capacity shock; and a large-data test that
   searches multiple patterns with all four string matchers, verifies
   equivalent results, sorts a large sequence collection, records timings and
-  an approximate memory observation, and writes benchmark outputs.
+  an approximate memory observation, and reports the measured results.
 - Document time and auxiliary-space complexity for all existing algorithms.
   Explain P, NP, NP-hardness, NP-completeness, the open P-versus-NP question,
   and the pseudopolynomial nature of 0/1 Knapsack DP.

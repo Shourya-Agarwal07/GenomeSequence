@@ -23,7 +23,6 @@ add_library(genome_core
     src/string_matching/string_matching.c
     src/sequence/sequence_statistics.c
     src/benchmark/benchmark.c
-    src/export/result_export.c
     src/cli/cli.c
 )
 

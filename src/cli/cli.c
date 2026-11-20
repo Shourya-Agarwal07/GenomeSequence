@@ -8,7 +8,6 @@
 #include "genome/algorithms/sequence_algorithms.h"
 #include "genome/benchmark/benchmark.h"
 #include "genome/domain/dna_sequence.h"
-#include "genome/export/result_export.h"
 #include "genome/graph/bipartite_matching.h"
 #include "genome/graph/ford_fulkerson.h"
 #include "genome/io/fasta_reader.h"
@@ -1030,123 +1029,6 @@ int genome_cli_run_benchmarks(FILE *output)
     return run_benchmark_menu(output);
 }
 
-static int output_path(char *destination,
-                       size_t capacity,
-                       const char *prefix,
-                       const char *suffix)
-{
-    int written = snprintf(destination, capacity, "%s-%s", prefix, suffix);
-    return written >= 0 && (size_t)written < capacity;
-}
-
-static int run_export_menu(FILE *input, FILE *output)
-{
-    char prefix[512];
-    char sequences_csv[600];
-    char sequences_json[600];
-    char benchmarks_csv[600];
-    char benchmarks_json[600];
-    char comparisons_csv[600];
-    char comparisons_json[600];
-    DnaSequence *sequences = NULL;
-    size_t sequence_count = 0;
-    BenchmarkRecord records[BENCHMARK_SUITE_MAX_RECORDS];
-    size_t record_count = 0;
-    StringMatchResult match_results[4];
-    AlgorithmComparisonRecord comparisons[4];
-    const char *algorithm_names[] = {
-        "Naive", "Rabin-Karp", "KMP", "Finite Automaton"
-    };
-    size_t i;
-    int results_initialized = 0;
-
-    if (!prompt_fasta(input, output, &sequences, &sequence_count)) {
-        return 1;
-    }
-    if (read_line(input, output, "Export filename prefix: ",
-                  prefix, sizeof(prefix)) != 1) {
-        fasta_sequences_destroy(sequences, sequence_count);
-        return 1;
-    }
-    if (prefix[0] == '\0') {
-        (void)snprintf(prefix, sizeof(prefix), "genome-results");
-    }
-    if (!output_path(sequences_csv, sizeof(sequences_csv), prefix,
-                     "sequences.csv") ||
-        !output_path(sequences_json, sizeof(sequences_json), prefix,
-                     "sequences.json") ||
-        !output_path(benchmarks_csv, sizeof(benchmarks_csv), prefix,
-                     "benchmarks.csv") ||
-        !output_path(benchmarks_json, sizeof(benchmarks_json), prefix,
-                     "benchmarks.json") ||
-        !output_path(comparisons_csv, sizeof(comparisons_csv), prefix,
-                     "comparisons.csv") ||
-        !output_path(comparisons_json, sizeof(comparisons_json), prefix,
-                     "comparisons.json")) {
-        fputs("Export prefix is too long.\n", output);
-        fasta_sequences_destroy(sequences, sequence_count);
-        return 1;
-    }
-    if (!benchmark_run_suite(records, BENCHMARK_SUITE_MAX_RECORDS,
-                             &record_count)) {
-        fputs("Benchmark suite failed; no benchmark export was written.\n",
-              output);
-        fasta_sequences_destroy(sequences, sequence_count);
-        return 1;
-    }
-    if (sequence_count == 0) {
-        fputs("The FASTA file contains no records to compare.\n", output);
-        fasta_sequences_destroy(sequences, sequence_count);
-        return 1;
-    }
-    for (i = 0; i < 4; ++i) {
-        string_match_result_init(&match_results[i]);
-    }
-    results_initialized = 1;
-    if (!string_match_naive(sequences[0].bases, sequences[0].length,
-                            "A", 1, &match_results[0]) ||
-        !string_match_rabin_karp(sequences[0].bases, sequences[0].length,
-                                 "A", 1, &match_results[1]) ||
-        !string_match_kmp(sequences[0].bases, sequences[0].length,
-                          "A", 1, &match_results[2]) ||
-        !string_match_finite_automaton(
-            sequences[0].bases, sequences[0].length, "A", 1,
-            &match_results[3])) {
-        fputs("Could not compare string-matching implementations.\n", output);
-        goto export_cleanup;
-    }
-    for (i = 0; i < 4; ++i) {
-        comparisons[i].algorithm = algorithm_names[i];
-        comparisons[i].result_count = match_results[i].count;
-        comparisons[i].matches_reference =
-            results_are_equal(&match_results[0], &match_results[i]);
-    }
-    if (!export_sequence_statistics_csv(sequences_csv, sequences,
-                                        sequence_count) ||
-        !export_sequence_statistics_json(sequences_json, sequences,
-                                         sequence_count) ||
-        !export_benchmark_records_csv(benchmarks_csv, records, record_count) ||
-        !export_benchmark_records_json(benchmarks_json, records,
-                                      record_count) ||
-        !export_algorithm_comparisons_csv(comparisons_csv, comparisons, 4) ||
-        !export_algorithm_comparisons_json(comparisons_json, comparisons, 4)) {
-        fputs("One or more exports failed; check the path and disk space.\n",
-              output);
-    } else {
-        fprintf(output, "Wrote %s, %s, %s, %s, %s, and %s.\n",
-                sequences_csv, sequences_json, benchmarks_csv,
-                benchmarks_json, comparisons_csv, comparisons_json);
-    }
-export_cleanup:
-    if (results_initialized) {
-        for (i = 0; i < 4; ++i) {
-            string_match_result_destroy(&match_results[i]);
-        }
-    }
-    fasta_sequences_destroy(sequences, sequence_count);
-    return 1;
-}
-
 typedef int (*CliWorkflow)(FILE *input, FILE *output);
 
 static int run_module_workflow(FILE *input, FILE *output, size_t module)
@@ -1172,8 +1054,6 @@ static int run_module_workflow(FILE *input, FILE *output, size_t module)
         return run_string_search(input, output);
     case 10:
         return run_benchmark_menu(output);
-    case 11:
-        return run_export_menu(input, output);
     default:
         return 0;
     }
@@ -1238,8 +1118,7 @@ static void print_main_menu(FILE *output, const CliContext *context)
           "[08] Graph and Flow Algorithms\n"
           "[09] String Matching Algorithms\n"
           "[10] Benchmarking and Performance Analysis\n"
-          "[11] Export Results (CSV / JSON)\n"
-          "[12] DNA Sequence Alignment\n\n"
+          "[11] DNA Sequence Alignment\n\n"
           "[00] Exit Application\n\n",
           output);
 }
@@ -1293,7 +1172,7 @@ int genome_cli_run(FILE *input, FILE *output)
 
         clear_screen(&context, output);
         print_main_menu(output, &context);
-        status = read_menu_choice(input, output, 12, &choice);
+        status = read_menu_choice(input, output, 11, &choice);
         if (status == 0) {
             fputs("Input ended; exiting safely.\n", output);
             restore_terminal(&context);
@@ -1302,7 +1181,7 @@ int genome_cli_run(FILE *input, FILE *output)
         if (status < 0) {
             print_error(output, &context,
                         "Invalid menu choice. Choose a module from 01 "
-                        "through 12, or 00 to exit.");
+                        "through 11, or 00 to exit.");
             continue;
         }
         if (choice == 0) {
@@ -1312,7 +1191,7 @@ int genome_cli_run(FILE *input, FILE *output)
             }
             continue;
         }
-        if (choice == 12) {
+        if (choice == 11) {
             (void)run_dna_alignment(input, output, &context);
             continue;
         }
@@ -1383,12 +1262,6 @@ int genome_cli_run(FILE *input, FILE *output)
                 "Run verified benchmarks and inspect measured performance.",
                 "Run the benchmark suite");
             break;
-        case 11:
-            (void)run_simple_submenu(
-                input, output, &context, choice, "EXPORT RESULTS",
-                "Export sequence, benchmark, and comparison results.",
-                "Create CSV and JSON exports");
-            break;
         default:
             break;
         }
@@ -1400,7 +1273,6 @@ static int run_normal_demo(FILE *output)
     DnaSequence *sequences = NULL;
     size_t count = 0;
     StringMatchResult results[4];
-    AlgorithmComparisonRecord comparisons[4];
     const char *names[] = {
         "Naive", "Rabin-Karp", "KMP", "Finite Automaton"
     };
@@ -1418,11 +1290,7 @@ static int run_normal_demo(FILE *output)
         print_statistics(output, sequences[i].identifier,
                          sequences[i].bases, sequences[i].length);
     }
-    if (count == 0 ||
-        !export_sequence_statistics_csv("demo-normal-sequences.csv",
-                                       sequences, count) ||
-        !export_sequence_statistics_json("demo-normal-sequences.json",
-                                        sequences, count)) {
+    if (count == 0) {
         goto cleanup;
     }
 
@@ -1468,23 +1336,20 @@ static int run_normal_demo(FILE *output)
         }
     }
     for (i = 0; i < 4; ++i) {
-        comparisons[i].algorithm = names[i];
-        comparisons[i].result_count = results[i].count;
-        comparisons[i].matches_reference =
-            results_are_equal(&results[0], &results[i]);
+        if (!results_are_equal(&results[0], &results[i])) {
+            size_t result_index;
+            for (result_index = 0; result_index < 4; ++result_index) {
+                string_match_result_destroy(&results[result_index]);
+            }
+            goto cleanup;
+        }
     }
     for (i = 0; i < 4; ++i) {
         print_string_matches(output, names[i], &results[i]);
         string_match_result_destroy(&results[i]);
     }
-    successful = export_algorithm_comparisons_csv(
-                     "demo-normal-matches.csv", comparisons, 4) &&
-                 export_algorithm_comparisons_json(
-                     "demo-normal-matches.json", comparisons, 4);
-    if (successful) {
-        fputs("Exported sequence statistics and string-match comparison "
-              "results.\n", output);
-    }
+    successful = 1;
+    fputs("All four string matchers agree.\n", output);
 
 cleanup:
     fasta_sequences_destroy(sequences, count);
@@ -1528,8 +1393,6 @@ typedef struct {
     const StringMatchResult *reference;
     StringMatchResult result;
     int algorithm;
-    size_t measured_result_bytes;
-    size_t result_count;
 } StressSearchContext;
 
 static int stress_search_prepare(void *context_pointer)
@@ -1569,14 +1432,7 @@ static int stress_search_verify(void *context_pointer)
 {
     StressSearchContext *context =
         (StressSearchContext *)context_pointer;
-    if (!results_are_equal(&context->result, context->reference) ||
-        context->result.capacity > SIZE_MAX / sizeof(size_t)) {
-        return 0;
-    }
-    context->measured_result_bytes =
-        context->result.capacity * sizeof(size_t);
-    context->result_count = context->result.count;
-    return 1;
+    return results_are_equal(&context->result, context->reference);
 }
 
 static void stress_search_cleanup(void *context_pointer)
@@ -1597,8 +1453,6 @@ static int run_stress_demo(FILE *output)
     DnaSequence *sequences = NULL;
     char (*identifiers)[24] = NULL;
     char (*bases)[STRESS_SEQUENCE_LENGTH + 1] = NULL;
-    BenchmarkRecord records[12];
-    size_t record_count = 0;
     uint32_t random_state = UINT32_C(0xC17DAA);
     size_t i;
     size_t j;
@@ -1656,6 +1510,7 @@ static int run_stress_demo(FILE *output)
 
         for (algorithm_index = 0; algorithm_index < 4; ++algorithm_index) {
             StressSearchContext context;
+            BenchmarkRecord record;
             char record_name[BENCHMARK_ALGORITHM_NAME_CAPACITY];
             int written;
 
@@ -1678,33 +1533,13 @@ static int run_stress_demo(FILE *output)
                                    stress_search_operation,
                                    stress_search_verify,
                                    stress_search_cleanup, NULL, &context,
-                                   &records[record_count])) {
+                                   &record)) {
                 stress_search_cleanup(&context);
                 string_match_result_destroy(&reference);
                 goto cleanup;
             }
-            (void)snprintf(records[record_count].dataset,
-                           sizeof(records[record_count].dataset), "stress");
-            records[record_count].measured_result_bytes =
-                context.measured_result_bytes;
-            records[record_count].has_measured_result_bytes = 1;
-            records[record_count].result_count = context.result_count;
-            records[record_count].has_result_count = 1;
-            records[record_count].has_estimated_auxiliary_bytes = 1;
-            if (algorithm_index == 2) {
-                records[record_count].estimated_auxiliary_bytes =
-                    pattern_length * sizeof(size_t);
-            } else if (algorithm_index == 3) {
-                records[record_count].estimated_auxiliary_bytes =
-                    ((pattern_length + 1) * 256 + pattern_length) *
-                    sizeof(size_t);
-            } else {
-                records[record_count].estimated_auxiliary_bytes = 0;
-            }
             fprintf(output, "%s: %.6f seconds, verified.\n",
-                    records[record_count].algorithm,
-                    records[record_count].average_seconds);
-            ++record_count;
+                    record.algorithm, record.average_seconds);
         }
         string_match_result_destroy(&reference);
     }
@@ -1740,14 +1575,8 @@ static int run_stress_demo(FILE *output)
             difftime(end_time.tv_sec, start_time.tv_sec) +
                 ((double)end_time.tv_nsec - (double)start_time.tv_nsec) /
                     1000000000.0);
-    if (!export_benchmark_records_csv("demo-stress-benchmarks.csv",
-                                      records, record_count) ||
-        !export_benchmark_records_json("demo-stress-benchmarks.json",
-                                       records, record_count)) {
-        goto cleanup;
-    }
     successful = 1;
-    fputs("Exported the twelve verified string-search benchmark records.\n",
+    fputs("All twelve string-search benchmark records were verified.\n",
           output);
 
 cleanup:
@@ -1756,7 +1585,8 @@ cleanup:
     free(sequences);
     free(text);
     if (!successful) {
-        fputs("Stress demo failed; reduce the workload or check disk space.\n",
+        fputs("Stress demo failed; reduce the workload or check available "
+              "memory.\n",
               output);
     }
     return successful;

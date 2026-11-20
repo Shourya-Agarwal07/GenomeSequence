@@ -452,30 +452,6 @@ src/domain/dna_sequence.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\genome_core.dir\build.make CMakeFiles/genome_core.dir/src/domain/dna_sequence.c.s
 .PHONY : src/domain/dna_sequence.c.s
 
-src/export/result_export.obj: src/export/result_export.c.obj
-.PHONY : src/export/result_export.obj
-
-# target to build an object file
-src/export/result_export.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\genome_core.dir\build.make CMakeFiles/genome_core.dir/src/export/result_export.c.obj
-.PHONY : src/export/result_export.c.obj
-
-src/export/result_export.i: src/export/result_export.c.i
-.PHONY : src/export/result_export.i
-
-# target to preprocess a source file
-src/export/result_export.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\genome_core.dir\build.make CMakeFiles/genome_core.dir/src/export/result_export.c.i
-.PHONY : src/export/result_export.c.i
-
-src/export/result_export.s: src/export/result_export.c.s
-.PHONY : src/export/result_export.s
-
-# target to generate assembly for a file
-src/export/result_export.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\genome_core.dir\build.make CMakeFiles/genome_core.dir/src/export/result_export.c.s
-.PHONY : src/export/result_export.c.s
-
 src/graph/bipartite_matching.obj: src/graph/bipartite_matching.c.obj
 .PHONY : src/graph/bipartite_matching.obj
 
@@ -692,9 +668,6 @@ help:
 	@echo ... src/domain/dna_sequence.obj
 	@echo ... src/domain/dna_sequence.i
 	@echo ... src/domain/dna_sequence.s
-	@echo ... src/export/result_export.obj
-	@echo ... src/export/result_export.i
-	@echo ... src/export/result_export.s
 	@echo ... src/graph/bipartite_matching.obj
 	@echo ... src/graph/bipartite_matching.i
 	@echo ... src/graph/bipartite_matching.s

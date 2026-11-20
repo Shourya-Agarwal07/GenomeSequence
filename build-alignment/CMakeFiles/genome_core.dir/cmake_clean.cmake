@@ -23,8 +23,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/genome_core.dir/src/cli/cli.c.obj.d"
   "CMakeFiles/genome_core.dir/src/domain/dna_sequence.c.obj"
   "CMakeFiles/genome_core.dir/src/domain/dna_sequence.c.obj.d"
-  "CMakeFiles/genome_core.dir/src/export/result_export.c.obj"
-  "CMakeFiles/genome_core.dir/src/export/result_export.c.obj.d"
   "CMakeFiles/genome_core.dir/src/graph/bipartite_matching.c.obj"
   "CMakeFiles/genome_core.dir/src/graph/bipartite_matching.c.obj.d"
   "CMakeFiles/genome_core.dir/src/graph/ford_fulkerson.c.obj"

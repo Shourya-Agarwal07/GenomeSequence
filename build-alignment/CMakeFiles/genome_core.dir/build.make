@@ -311,26 +311,11 @@ CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.s"
 	C:\msys64\ucrt64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\GenomeToolkit_C17_Starter\src\benchmark\benchmark.c -o CMakeFiles\genome_core.dir\src\benchmark\benchmark.c.s
 
-CMakeFiles/genome_core.dir/src/export/result_export.c.obj: CMakeFiles/genome_core.dir/flags.make
-CMakeFiles/genome_core.dir/src/export/result_export.c.obj: CMakeFiles/genome_core.dir/includes_C.rsp
-CMakeFiles/genome_core.dir/src/export/result_export.c.obj: D:/GenomeToolkit_C17_Starter/src/export/result_export.c
-CMakeFiles/genome_core.dir/src/export/result_export.c.obj: CMakeFiles/genome_core.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\GenomeToolkit_C17_Starter\build-alignment\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/genome_core.dir/src/export/result_export.c.obj"
-	C:\msys64\ucrt64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/genome_core.dir/src/export/result_export.c.obj -MF CMakeFiles\genome_core.dir\src\export\result_export.c.obj.d -o CMakeFiles\genome_core.dir\src\export\result_export.c.obj -c D:\GenomeToolkit_C17_Starter\src\export\result_export.c
-
-CMakeFiles/genome_core.dir/src/export/result_export.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/genome_core.dir/src/export/result_export.c.i"
-	C:\msys64\ucrt64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\GenomeToolkit_C17_Starter\src\export\result_export.c > CMakeFiles\genome_core.dir\src\export\result_export.c.i
-
-CMakeFiles/genome_core.dir/src/export/result_export.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/genome_core.dir/src/export/result_export.c.s"
-	C:\msys64\ucrt64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\GenomeToolkit_C17_Starter\src\export\result_export.c -o CMakeFiles\genome_core.dir\src\export\result_export.c.s
-
 CMakeFiles/genome_core.dir/src/cli/cli.c.obj: CMakeFiles/genome_core.dir/flags.make
 CMakeFiles/genome_core.dir/src/cli/cli.c.obj: CMakeFiles/genome_core.dir/includes_C.rsp
 CMakeFiles/genome_core.dir/src/cli/cli.c.obj: D:/GenomeToolkit_C17_Starter/src/cli/cli.c
 CMakeFiles/genome_core.dir/src/cli/cli.c.obj: CMakeFiles/genome_core.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\GenomeToolkit_C17_Starter\build-alignment\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/genome_core.dir/src/cli/cli.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\GenomeToolkit_C17_Starter\build-alignment\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/genome_core.dir/src/cli/cli.c.obj"
 	C:\msys64\ucrt64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/genome_core.dir/src/cli/cli.c.obj -MF CMakeFiles\genome_core.dir\src\cli\cli.c.obj.d -o CMakeFiles\genome_core.dir\src\cli\cli.c.obj -c D:\GenomeToolkit_C17_Starter\src\cli\cli.c
 
 CMakeFiles/genome_core.dir/src/cli/cli.c.i: cmake_force
@@ -359,7 +344,6 @@ genome_core_OBJECTS = \
 "CMakeFiles/genome_core.dir/src/string_matching/string_matching.c.obj" \
 "CMakeFiles/genome_core.dir/src/sequence/sequence_statistics.c.obj" \
 "CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.obj" \
-"CMakeFiles/genome_core.dir/src/export/result_export.c.obj" \
 "CMakeFiles/genome_core.dir/src/cli/cli.c.obj"
 
 # External object files for target genome_core
@@ -381,11 +365,10 @@ libgenome_core.a: CMakeFiles/genome_core.dir/src/graph/bipartite_matching.c.obj
 libgenome_core.a: CMakeFiles/genome_core.dir/src/string_matching/string_matching.c.obj
 libgenome_core.a: CMakeFiles/genome_core.dir/src/sequence/sequence_statistics.c.obj
 libgenome_core.a: CMakeFiles/genome_core.dir/src/benchmark/benchmark.c.obj
-libgenome_core.a: CMakeFiles/genome_core.dir/src/export/result_export.c.obj
 libgenome_core.a: CMakeFiles/genome_core.dir/src/cli/cli.c.obj
 libgenome_core.a: CMakeFiles/genome_core.dir/build.make
 libgenome_core.a: CMakeFiles/genome_core.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\GenomeToolkit_C17_Starter\build-alignment\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking C static library libgenome_core.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\GenomeToolkit_C17_Starter\build-alignment\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking C static library libgenome_core.a"
 	$(CMAKE_COMMAND) -P CMakeFiles\genome_core.dir\cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\genome_core.dir\link.txt --verbose=$(VERBOSE)
 

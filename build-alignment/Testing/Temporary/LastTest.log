@@ -1,10 +1,10 @@
-Start testing: Nov 20 22:09 India Standard Time
+Start testing: Nov 21 00:09 India Standard Time
 ----------------------------------------------------------
 1/1 Testing: genome_tests
 1/1 Test: genome_tests
 Command: "D:/GenomeToolkit_C17_Starter/build-alignment/genome_tests.exe"
 Directory: D:/GenomeToolkit_C17_Starter
-"genome_tests" start time: Nov 20 22:09 India Standard Time
+"genome_tests" start time: Nov 21 00:09 India Standard Time
 Output:
 ----------------------------------------------------------
 PASS: divide-and-conquer maximum subarray
@@ -110,18 +110,17 @@ PASS: Prim and Kruskal negative-weight agreement
 PASS: sequence statistics and GC percentage
 PASS: benchmark measurement and verification
 PASS: verified multi-algorithm benchmark suite
-PASS: CSV and JSON result exports
 PASS: interactive CLI end-to-end workflows
 PASS: normal-operation CLI demonstration
 PASS: constraint-shock CLI demonstration
 PASS: large-data stress CLI demonstration
-All 108 tests passed.
+All 107 tests passed.
 <end of output>
-Test time =   0.40 sec
+Test time =   0.18 sec
 ----------------------------------------------------------
 Test Passed.
-"genome_tests" end time: Nov 20 22:09 India Standard Time
+"genome_tests" end time: Nov 21 00:09 India Standard Time
 "genome_tests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Nov 20 22:09 India Standard Time
+End testing: Nov 21 00:09 India Standard Time

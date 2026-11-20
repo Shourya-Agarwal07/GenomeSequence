@@ -21,7 +21,6 @@ CMakeFiles/genome_core.dir/src/cli/cli.c.obj: \
  D:/GenomeToolkit_C17_Starter/include/genome/algorithms/sequence_algorithms.h \
  D:/GenomeToolkit_C17_Starter/include/genome/domain/dna_sequence.h \
  D:/GenomeToolkit_C17_Starter/include/genome/benchmark/benchmark.h \
- D:/GenomeToolkit_C17_Starter/include/genome/export/result_export.h \
  D:/GenomeToolkit_C17_Starter/include/genome/graph/bipartite_matching.h \
  D:/GenomeToolkit_C17_Starter/include/genome/graph/ford_fulkerson.h \
  D:/GenomeToolkit_C17_Starter/include/genome/io/fasta_reader.h \

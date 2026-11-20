@@ -27,14 +27,13 @@ This starter contains:
   strings.
 - A menu-driven CLI for sequence statistics, FASTA operations, sorting/searching,
   representative algorithm demonstrations, matching, benchmarks, and
-  result export. The original `genome_tool <input.fasta>` form is retained.
-- Sequence statistics, a verified benchmark suite, and streaming CSV/JSON
-  exporters for sequence statistics, benchmark records, and algorithm
-  comparisons.
+  sequence alignment. The original `genome_tool <input.fasta>` form is
+  retained.
+- Sequence statistics and a verified benchmark suite.
 - Three deterministic demonstrations: normal operation, a knapsack capacity
   shock, and large-data stress testing.
 - An automated test executable covering the domain, FASTA, all remaining
-  algorithm modules, and CLI integration (108 test groups).
+  algorithm modules, and CLI integration (107 test groups).
 
 Complexity analysis, operation-counter definitions, algorithm pseudocode, and
 design decisions are documented in [docs/architecture.md](docs/architecture.md)
@@ -147,7 +146,7 @@ ctest --test-dir build -C Release --output-on-failure
 .\build\Release\genome_tool.exe data\samples\demo.fasta
 ```
 
-## Milestone 8 CLI, demos, benchmarks, and exports
+## Milestone 8 CLI, demos, and benchmarks
 
 Run the interactive menu with no arguments, or start a focused, repeatable
 scenario:
@@ -162,15 +161,12 @@ scenario:
 ```
 
 The normal scenario reads `data/samples/demo.fasta`, prints per-sequence base
-counts and GC percentage, demonstrates sorting and cross-validated string
-matching, and writes `demo-normal-sequences.csv/.json` and
-`demo-normal-matches.csv/.json`. The stress scenario generates a deterministic
+counts and GC percentage, demonstrates sorting, and prints cross-validated
+string-matching results. The stress scenario generates a deterministic
 one-million-byte DNA text and 512 synthetic sequences, benchmarks all four
 string matchers on three patterns, verifies their results against Naive
-matching, and writes `demo-stress-benchmarks.csv/.json`. The `Export Results`
-menu item accepts a FASTA file and filename prefix and produces CSV and JSON
-files for sequence statistics, verified benchmarks, and algorithm
-comparisons. Benchmark measurements are machine-dependent observations; see
+matching, sorts the synthetic sequences, and prints the verified timings.
+Benchmark measurements are machine-dependent observations; see
 the [benchmark notes](docs/architecture.md#benchmarking),
 [test plan](docs/test-plan.md), and
 [presentation script](docs/presentation-script.md).
@@ -206,7 +202,6 @@ See the [complexity reference](docs/complexity-reference.md).
 - `src/string_matching/` byte-oriented string-search algorithms
 - `src/sequence/` sequence statistics
 - `src/benchmark/` timing and correctness-checked benchmark suite
-- `src/export/` streaming CSV and JSON exporters
 - `src/cli/` interactive menu and reproducible demo scenarios
 - `tests/` automated tests
 - `data/` reproducible sample datasets

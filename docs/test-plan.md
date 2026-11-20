@@ -200,20 +200,17 @@ multiplication.
   must be marked verified. The string-matching records cover four datasets
   with identical inputs for Naive, Rabin–Karp, KMP, and finite automaton;
   memory fields, match counts, and dataset labels are checked.
-- CSV/JSON exports cover benchmark, sequence-statistics, and algorithm
-  comparison records. Identifiers and algorithm names containing commas and
-  quotes must be escaped correctly; generated fixture files are removed.
-- The interactive menu is exercised with scripted input across all 12
+- The interactive menu is exercised with scripted input across all 11
   remaining modules: DNA
   statistics, FASTA loading, sorting/searching, divide-and-conquer, greedy,
   LCS, global and local DNA alignment, Knapsack search, flow, string matching,
-  benchmarking, and exports. The test checks representative outputs,
+  and benchmarking. The test checks representative outputs,
   custom alignment scoring, and that all four string matchers agree.
-- The normal demo is checked for its sequence-statistics and matcher exports;
+- The normal demo is checked for sequence statistics and matcher agreement;
   the capacity-shock demo is checked for both capacity cases; the stress demo
   runs the deterministic million-byte text and 512-record sort, verifies all
-  twelve string-search benchmark records, and produces CSV/JSON benchmark files.
-- The suite contains 108 test groups in total. CTest runs the test executable
+  twelve string-search benchmark records and prints their timings.
+- The suite contains 107 test groups in total. CTest runs the test executable
   from the project root so the bundled sample FASTA path is stable.
 - Wall-clock durations are displayed but are not compared to fixed
   thresholds. Benchmark memory reports distinguish measured returned-result

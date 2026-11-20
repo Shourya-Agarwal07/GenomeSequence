@@ -62,7 +62,6 @@ input representations and important limitations are described in
 | Rabin–Karp | O(n + m) expected; O(nm) worst case | O(1) | Verifies bytes after hash equality; excludes returned positions. |
 | Knuth–Morris–Pratt | O(n + m) | O(m) | LPS table; excludes returned positions. |
 | Finite-automaton string matching | O(256m + n) | O(256m) | Byte alphabet transition table; excludes returned positions. |
-| CSV/JSON result export | O(R + B) | O(1) streaming workspace | `R` records and `B` bytes written; files are streamed. |
 | Benchmark harness | Depends on measured operation | Depends on test data and result | Preparation, verification, and cleanup are outside the timed interval. |
 
 All reported bounds describe algorithm work, not wall-clock guarantees. The

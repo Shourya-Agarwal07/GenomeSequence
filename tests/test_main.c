@@ -10,7 +10,6 @@
 #include "genome/graph/bipartite_matching.h"
 #include "genome/string_matching/string_matching.h"
 #include "genome/benchmark/benchmark.h"
-#include "genome/export/result_export.h"
 #include "genome/sequence/sequence_statistics.h"
 #include "genome/cli/cli.h"
 
@@ -4284,88 +4283,6 @@ static int test_benchmark_suite(void)
                                 &count);
 }
 
-static int file_contains_text(const char *path, const char *needle)
-{
-    FILE *file = fopen(path, "rb");
-    char content[4096];
-    size_t bytes_read;
-
-    if (file == NULL) {
-        return 0;
-    }
-    bytes_read = fread(content, 1, sizeof(content) - 1, file);
-    content[bytes_read] = '\0';
-    fclose(file);
-    return strstr(content, needle) != NULL;
-}
-
-static int test_result_exports(void)
-{
-    char identifier[] = "id,\"quoted\"";
-    char bases[] = "ACGNT";
-    DnaSequence sequence = {identifier, bases, 5};
-    BenchmarkRecord benchmark = {
-        .algorithm = "test, \"run\"",
-        .dataset = "small",
-        .input_size = 4,
-        .average_seconds = 0.25,
-        .repetitions = 2,
-        .verified = 1,
-        .operation_count = 7,
-        .has_operation_count = 1,
-        .measured_result_bytes = 16,
-        .has_measured_result_bytes = 1,
-        .estimated_auxiliary_bytes = 32,
-        .has_estimated_auxiliary_bytes = 1,
-        .result_count = 2,
-        .has_result_count = 1,
-        .solution_value = -3,
-        .has_solution_value = 1
-    };
-    AlgorithmComparisonRecord comparison = {"KMP, \"verified\"", 2, 1};
-    int successful = 0;
-
-    if (!export_benchmark_records_csv("test-m8-benchmark.csv", &benchmark,
-                                      1) ||
-        !export_benchmark_records_json("test-m8-benchmark.json", &benchmark,
-                                       1) ||
-        !export_sequence_statistics_csv("test-m8-sequences.csv", &sequence,
-                                        1) ||
-        !export_sequence_statistics_json("test-m8-sequences.json", &sequence,
-                                         1) ||
-        !export_algorithm_comparisons_csv("test-m8-comparisons.csv",
-                                          &comparison, 1) ||
-        !export_algorithm_comparisons_json("test-m8-comparisons.json",
-                                           &comparison, 1)) {
-        goto cleanup;
-    }
-    successful =
-        file_contains_text("test-m8-benchmark.csv", "\"test, \"\"run\"\"\"") &&
-        file_contains_text("test-m8-benchmark.csv",
-                           "measured_result_bytes,estimated_auxiliary_bytes") &&
-        file_contains_text("test-m8-benchmark.csv", ",16,32,2,-3") &&
-        file_contains_text("test-m8-benchmark.json", "test, \\\"run\\\"") &&
-        file_contains_text("test-m8-benchmark.json",
-                           "\"measured_result_bytes\":16") &&
-        file_contains_text("test-m8-benchmark.json",
-                           "\"solution_value\":-3") &&
-        file_contains_text("test-m8-sequences.csv", "\"id,\"\"quoted\"\"\"") &&
-        file_contains_text("test-m8-sequences.json", "id,\\\"quoted\\\"") &&
-        file_contains_text("test-m8-comparisons.csv",
-                           "\"KMP, \"\"verified\"\"\"") &&
-        file_contains_text("test-m8-comparisons.json",
-                           "KMP, \\\"verified\\\"");
-
-cleanup:
-    (void)remove("test-m8-benchmark.csv");
-    (void)remove("test-m8-benchmark.json");
-    (void)remove("test-m8-sequences.csv");
-    (void)remove("test-m8-sequences.json");
-    (void)remove("test-m8-comparisons.csv");
-    (void)remove("test-m8-comparisons.json");
-    return successful;
-}
-
 static int test_cli_menu_integration(void)
 {
     static const char input_text[] =
@@ -4382,8 +4299,7 @@ static int test_cli_menu_integration(void)
         "08\n01\n00\n"
         "09\n01\n\n1\nACG\n4\n00\n"
         "10\n01\n00\n"
-        "11\n01\n\nmenu-test-m8\n00\n"
-        "12\n03\n04\n01\nACG\nAG\n\n\n\n"
+        "11\n03\n04\n01\nACG\nAG\n\n\n\n"
         "02\nA\nA\n3\n-2\n-4\n04\n00\n"
         "00\ny\n";
     FILE *input = tmpfile();
@@ -4411,9 +4327,8 @@ static int test_cli_menu_integration(void)
                  strstr(transcript, "PROJECT MODULES") != NULL &&
                  strstr(transcript,
                         "[10] Benchmarking and Performance Analysis") != NULL &&
-                 strstr(transcript, "[11] Export Results (CSV / JSON)") !=
-                     NULL &&
-                 strstr(transcript, "[12] DNA Sequence Alignment") != NULL &&
+                 strstr(transcript, "[11] DNA Sequence Alignment") != NULL &&
+                 strstr(transcript, "[12]") == NULL &&
                  strstr(transcript, "Invalid menu choice") != NULL &&
                  strstr(transcript, "Exit cancelled.") != NULL &&
                  strstr(transcript, "A=1 C=1 G=1 T=1") != NULL &&
@@ -4439,22 +4354,13 @@ static int test_cli_menu_integration(void)
                  strstr(transcript, "All algorithms agree: yes.") != NULL &&
                  strstr(transcript, "Compare exact 0/1 Knapsack search") !=
                      NULL &&
-                 strstr(transcript, "menu-test-m8-comparisons.json") != NULL &&
                  strstr(transcript, "Goodbye.") != NULL;
-    (void)remove("menu-test-m8-sequences.csv");
-    (void)remove("menu-test-m8-sequences.json");
-    (void)remove("menu-test-m8-benchmarks.csv");
-    (void)remove("menu-test-m8-benchmarks.json");
-    (void)remove("menu-test-m8-comparisons.csv");
-    (void)remove("menu-test-m8-comparisons.json");
     fclose(input);
     fclose(output);
     return successful;
 }
 
-static int demo_output_contains(const char *scenario,
-                                const char *expected,
-                                const char *cleanup_prefix)
+static int demo_output_contains(const char *scenario, const char *expected)
 {
     FILE *output = tmpfile();
     char transcript[8192];
@@ -4470,66 +4376,24 @@ static int demo_output_contains(const char *scenario,
     transcript[length] = '\0';
     successful = successful && strstr(transcript, expected) != NULL;
     fclose(output);
-    if (cleanup_prefix != NULL) {
-        char path[128];
-        const char *suffixes[] = {
-            "sequences.csv", "sequences.json", "matches.csv", "matches.json",
-            "benchmarks.csv", "benchmarks.json"
-        };
-        size_t i;
-        for (i = 0; i < sizeof(suffixes) / sizeof(suffixes[0]); ++i) {
-            (void)snprintf(path, sizeof(path), "%s-%s", cleanup_prefix,
-                           suffixes[i]);
-            (void)remove(path);
-        }
-    }
     return successful;
 }
 
 static int test_cli_normal_demo(void)
 {
-    int successful =
-        demo_output_contains("normal",
-                             "Exported sequence statistics and "
-                             "string-match comparison results.",
-                             NULL) &&
-        file_contains_text("demo-normal-matches.csv", "Naive,2,true") &&
-        file_contains_text("demo-normal-matches.csv", "Rabin-Karp,2,true") &&
-        file_contains_text("demo-normal-matches.csv", "KMP,2,true") &&
-        file_contains_text("demo-normal-matches.csv",
-                           "Finite Automaton,2,true") &&
-        file_contains_text("demo-normal-matches.json",
-                           "\"algorithm\":\"Naive\",\"result_count\":2,"
-                           "\"matches_reference\":true") &&
-        file_contains_text("demo-normal-matches.json",
-                           "\"algorithm\":\"Rabin-Karp\",\"result_count\":2,"
-                           "\"matches_reference\":true") &&
-        file_contains_text("demo-normal-matches.json",
-                           "\"algorithm\":\"KMP\",\"result_count\":2,"
-                           "\"matches_reference\":true") &&
-        file_contains_text("demo-normal-matches.json",
-                           "\"algorithm\":\"Finite Automaton\","
-                           "\"result_count\":2,\"matches_reference\":true");
-
-    (void)remove("demo-normal-sequences.csv");
-    (void)remove("demo-normal-sequences.json");
-    (void)remove("demo-normal-matches.csv");
-    (void)remove("demo-normal-matches.json");
-    return successful;
+    return demo_output_contains("normal", "All four string matchers agree.");
 }
 
 static int test_cli_constraint_shock_demo(void)
 {
-    return demo_output_contains("shock", "Capacity 12 -> maximum value",
-                                NULL);
+    return demo_output_contains("shock", "Capacity 12 -> maximum value");
 }
 
 static int test_cli_stress_demo(void)
 {
     return demo_output_contains("stress",
-                                "Exported the twelve verified string-search "
-                                "benchmark records.",
-                                "demo-stress");
+                                "All twelve string-search benchmark records "
+                                "were verified.");
 }
 
 static int tests_run = 0;
@@ -4733,8 +4597,6 @@ int main(void)
                          test_benchmark_measurement);
     failures += run_test("verified multi-algorithm benchmark suite",
                          test_benchmark_suite);
-    failures += run_test("CSV and JSON result exports",
-                         test_result_exports);
     failures += run_test("interactive CLI end-to-end workflows",
                          test_cli_menu_integration);
     failures += run_test("normal-operation CLI demonstration",

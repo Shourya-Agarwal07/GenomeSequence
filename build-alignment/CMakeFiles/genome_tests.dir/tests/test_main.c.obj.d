@@ -19,7 +19,6 @@ CMakeFiles/genome_tests.dir/tests/test_main.c.obj: \
  D:/GenomeToolkit_C17_Starter/include/genome/graph/bipartite_matching.h \
  D:/GenomeToolkit_C17_Starter/include/genome/string_matching/string_matching.h \
  D:/GenomeToolkit_C17_Starter/include/genome/benchmark/benchmark.h \
- D:/GenomeToolkit_C17_Starter/include/genome/export/result_export.h \
  D:/GenomeToolkit_C17_Starter/include/genome/sequence/sequence_statistics.h \
  D:/GenomeToolkit_C17_Starter/include/genome/cli/cli.h \
  C:/msys64/ucrt64/include/stdio.h \
