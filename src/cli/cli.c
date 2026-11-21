@@ -962,46 +962,225 @@ failure:
     return 1;
 }
 
+static void print_benchmark_border(FILE *output,
+                                   const size_t *column_widths,
+                                   size_t column_count)
+{
+    size_t column;
+
+    fputc('+', output);
+    for (column = 0; column < column_count; ++column) {
+        size_t character;
+
+        for (character = 0; character < column_widths[column] + 2;
+             ++character) {
+            fputc('-', output);
+        }
+        fputc('+', output);
+    }
+    fputc('\n', output);
+}
+
 static void print_benchmark_records(FILE *output,
                                     const BenchmarkRecord *records,
                                     size_t count)
 {
+    static const size_t performance_widths[] = {28, 5, 13, 3, 5};
+    static const size_t result_widths[] = {28, 11, 24};
+    static const size_t measurement_widths[] = {28, 5, 10, 10, 10};
     size_t i;
 
-    fputs("Algorithm | dataset | input size | average seconds | repetitions | "
-          "verified | measured result bytes | estimated auxiliary bytes | "
-          "quality/count | operations\n", output);
+    fputs("BENCHMARK CONFIGURATION\n", output);
+    fputs("Measured records : ", output);
+    fprintf(output, "%zu\n", count);
+    fputs("Time unit        : milliseconds (average elapsed time)\n\n",
+          output);
+
+    fputs("ALGORITHM PERFORMANCE\n", output);
     for (i = 0; i < count; ++i) {
-        fprintf(output, "%s | %s | %zu | %.9f | %zu | %s | ",
-                records[i].algorithm, records[i].dataset,
-                records[i].input_size,
-                records[i].average_seconds, records[i].repetitions,
-                records[i].verified ? "yes" : "no");
-        if (records[i].has_measured_result_bytes) {
-            fprintf(output, "%zu | ", records[i].measured_result_bytes);
+        size_t j;
+        const char *dataset = records[i].dataset[0] == '\0'
+                                  ? "-"
+                                  : records[i].dataset;
+
+        for (j = 0; j < i; ++j) {
+            if (strcmp(records[j].dataset, records[i].dataset) == 0) {
+                break;
+            }
+        }
+        if (j != i) {
+            continue;
+        }
+        fprintf(output, "\nDataset: %s\n", dataset);
+        print_benchmark_border(output, performance_widths,
+                               sizeof(performance_widths) /
+                                   sizeof(performance_widths[0]));
+        fprintf(output, "| %-28s | %5s | %13s | %3s | %-5s |\n",
+                "Algorithm", "Input", "Average (ms)", "Run", "Check");
+        print_benchmark_border(output, performance_widths,
+                               sizeof(performance_widths) /
+                                   sizeof(performance_widths[0]));
+        for (j = 0; j < count; ++j) {
+            if (strcmp(records[j].dataset, records[i].dataset) != 0) {
+                continue;
+            }
+            fprintf(output,
+                    "| %-28.28s | %5zu | %13.6f | %3zu | %-5s |\n",
+                    records[j].algorithm, records[j].input_size,
+                    records[j].average_seconds * 1000.0,
+                    records[j].repetitions,
+                    records[j].verified ? "PASS" : "FAIL");
+        }
+        print_benchmark_border(output, performance_widths,
+                               sizeof(performance_widths) /
+                                   sizeof(performance_widths[0]));
+    }
+
+    fputs("\nRESULTS AND COUNTS\n", output);
+    print_benchmark_border(output, result_widths,
+                           sizeof(result_widths) / sizeof(result_widths[0]));
+    fprintf(output, "| %-28s | %-11s | %-24s |\n", "Algorithm",
+            "Dataset", "Result");
+    print_benchmark_border(output, result_widths,
+                           sizeof(result_widths) / sizeof(result_widths[0]));
+    for (i = 0; i < count; ++i) {
+        char result[64];
+
+        if (records[i].has_result_count) {
+            snprintf(result, sizeof(result), "matches=%zu",
+                     records[i].result_count);
+        } else if (records[i].has_solution_value) {
+            snprintf(result, sizeof(result), "value=%" PRId64,
+                     records[i].solution_value);
         } else {
-            fputs("unavailable | ", output);
+            snprintf(result, sizeof(result), "n/a");
+        }
+        fprintf(output, "| %-28.28s | %-11.11s | %-24.24s |\n",
+                records[i].algorithm,
+                records[i].dataset[0] == '\0' ? "-" : records[i].dataset,
+                result);
+    }
+    print_benchmark_border(output, result_widths,
+                           sizeof(result_widths) / sizeof(result_widths[0]));
+
+    fputs("\nMEMORY AND OPERATION MEASUREMENTS\n", output);
+    print_benchmark_border(output, measurement_widths,
+                           sizeof(measurement_widths) /
+                               sizeof(measurement_widths[0]));
+    fprintf(output, "| %-28s | %5s | %10s | %10s | %10s |\n",
+            "Algorithm", "Input", "Result B", "Aux B", "Ops");
+    print_benchmark_border(output, measurement_widths,
+                           sizeof(measurement_widths) /
+                               sizeof(measurement_widths[0]));
+    for (i = 0; i < count; ++i) {
+        char result_bytes[32];
+        char auxiliary_bytes[32];
+        char operations[32];
+
+        if (records[i].has_measured_result_bytes) {
+            snprintf(result_bytes, sizeof(result_bytes), "%zu",
+                     records[i].measured_result_bytes);
+        } else {
+            snprintf(result_bytes, sizeof(result_bytes), "n/a");
         }
         if (records[i].has_estimated_auxiliary_bytes) {
-            fprintf(output, "%zu | ",
-                    records[i].estimated_auxiliary_bytes);
+            snprintf(auxiliary_bytes, sizeof(auxiliary_bytes), "%zu",
+                     records[i].estimated_auxiliary_bytes);
         } else {
-            fputs("unavailable | ", output);
-        }
-        if (records[i].has_result_count) {
-            fprintf(output, "matches=%zu | ", records[i].result_count);
-        } else if (records[i].has_solution_value) {
-            fprintf(output, "value=%" PRId64 " | ",
-                    records[i].solution_value);
-        } else {
-            fputs("n/a | ", output);
+            snprintf(auxiliary_bytes, sizeof(auxiliary_bytes), "n/a");
         }
         if (records[i].has_operation_count) {
-            fprintf(output, "%llu\n",
-                    (unsigned long long)records[i].operation_count);
+            snprintf(operations, sizeof(operations), "%llu",
+                     (unsigned long long)records[i].operation_count);
         } else {
-            fputs("not instrumented\n", output);
+            snprintf(operations, sizeof(operations), "n/a");
         }
+        fprintf(output, "| %-28.28s | %5zu | %10s | %10s | %10s |\n",
+                records[i].algorithm, records[i].input_size,
+                result_bytes, auxiliary_bytes, operations);
+    }
+    print_benchmark_border(output, measurement_widths,
+                           sizeof(measurement_widths) /
+                               sizeof(measurement_widths[0]));
+}
+
+static void print_string_benchmark_summaries(
+    FILE *output, const BenchmarkRecord *records, size_t count)
+{
+    size_t i;
+
+    fputs("\nPERFORMANCE SUMMARY\n", output);
+    for (i = 0; i < count; ++i) {
+        size_t j;
+        size_t algorithm_count = 0;
+        size_t occurrence_count = 0;
+        size_t fastest = i;
+        size_t slowest = i;
+        double total_seconds = 0.0;
+        int occurrences_match = 1;
+        int all_verified = 1;
+
+        if (!records[i].has_result_count) {
+            continue;
+        }
+        for (j = 0; j < i; ++j) {
+            if (records[j].has_result_count &&
+                records[j].input_size == records[i].input_size &&
+                strcmp(records[j].dataset, records[i].dataset) == 0) {
+                break;
+            }
+        }
+        if (j != i) {
+            continue;
+        }
+        for (j = i; j < count; ++j) {
+            if (!records[j].has_result_count ||
+                records[j].input_size != records[i].input_size ||
+                strcmp(records[j].dataset, records[i].dataset) != 0) {
+                continue;
+            }
+            if (algorithm_count == 0) {
+                occurrence_count = records[j].result_count;
+                fastest = j;
+                slowest = j;
+            } else {
+                if (records[j].result_count != occurrence_count) {
+                    occurrences_match = 0;
+                }
+                if (records[j].average_seconds <
+                    records[fastest].average_seconds) {
+                    fastest = j;
+                }
+                if (records[j].average_seconds >
+                    records[slowest].average_seconds) {
+                    slowest = j;
+                }
+            }
+            if (!records[j].verified) {
+                all_verified = 0;
+            }
+            total_seconds += records[j].average_seconds;
+            ++algorithm_count;
+        }
+        if (algorithm_count == 0) {
+            continue;
+        }
+
+        fprintf(output, "\nDataset: %s (input size %zu)\n",
+                records[i].dataset, records[i].input_size);
+        fprintf(output, "  Fastest Algorithm : %s (%.6f ms)\n",
+                records[fastest].algorithm,
+                records[fastest].average_seconds * 1000.0);
+        fprintf(output, "  Slowest Algorithm : %s (%.6f ms)\n",
+                records[slowest].algorithm,
+                records[slowest].average_seconds * 1000.0);
+        fprintf(output, "  Average Time      : %.6f ms\n",
+                total_seconds * 1000.0 / (double)algorithm_count);
+        fprintf(output,
+                "  Occurrences       : %zu across %zu algorithm(s)\n",
+                occurrence_count, algorithm_count);
+        fprintf(output, "  Correctness Check : %s\n",
+                all_verified && occurrences_match ? "PASSED" : "FAILED");
     }
 }
 
@@ -1016,6 +1195,7 @@ static int run_benchmark_menu(FILE *output)
         return 1;
     }
     print_benchmark_records(output, records, count);
+    print_string_benchmark_summaries(output, records, count);
     fputs("Times are measurements for this run, not complexity guarantees.\n",
           output);
     return 1;

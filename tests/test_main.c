@@ -4283,6 +4283,57 @@ static int test_benchmark_suite(void)
                                 &count);
 }
 
+static int test_cli_benchmark_format(void)
+{
+    FILE *output = tmpfile();
+    char transcript[65536];
+    size_t length;
+    size_t line_start = 0;
+    size_t i;
+    size_t passed_summaries = 0;
+    int successful;
+
+    if (output == NULL) {
+        return 0;
+    }
+    successful = genome_cli_run_benchmarks(output);
+    rewind(output);
+    length = fread(transcript, 1, sizeof(transcript) - 1, output);
+    transcript[length] = '\0';
+    successful = successful && length < sizeof(transcript) - 1 &&
+                 strstr(transcript, "BENCHMARK CONFIGURATION") != NULL &&
+                 strstr(transcript, "ALGORITHM PERFORMANCE") != NULL &&
+                 strstr(transcript, "RESULTS AND COUNTS") != NULL &&
+                 strstr(transcript, "MEMORY AND OPERATION MEASUREMENTS") !=
+                     NULL &&
+                 strstr(transcript, "PERFORMANCE SUMMARY") != NULL &&
+                 strstr(transcript, "Average (ms)") != NULL &&
+                 strstr(transcript, "matches=") != NULL &&
+                 strstr(transcript, "Dataset: adversarial") != NULL &&
+                 strstr(transcript, "Least-Cost Branch and Bound") != NULL;
+    for (i = 0; successful && i <= length; ++i) {
+        if (transcript[i] == '\n' || i == length) {
+            size_t line_length = i - line_start;
+
+            if (line_length > 80) {
+                successful = 0;
+            }
+            line_start = i + 1;
+        }
+        if (i < length && (unsigned char)transcript[i] > 127) {
+            successful = 0;
+        }
+        if (i + strlen("Correctness Check : PASSED") <= length &&
+            strncmp(transcript + i, "Correctness Check : PASSED",
+                    strlen("Correctness Check : PASSED")) == 0) {
+            ++passed_summaries;
+        }
+    }
+    successful = successful && passed_summaries == 4;
+    fclose(output);
+    return successful;
+}
+
 static int test_cli_menu_integration(void)
 {
     static const char input_text[] =
@@ -4597,6 +4648,8 @@ int main(void)
                          test_benchmark_measurement);
     failures += run_test("verified multi-algorithm benchmark suite",
                          test_benchmark_suite);
+    failures += run_test("formatted CLI benchmark output",
+                         test_cli_benchmark_format);
     failures += run_test("interactive CLI end-to-end workflows",
                          test_cli_menu_integration);
     failures += run_test("normal-operation CLI demonstration",

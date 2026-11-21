@@ -200,6 +200,8 @@ multiplication.
   must be marked verified. The string-matching records cover four datasets
   with identical inputs for Naive, Rabin–Karp, KMP, and finite automaton;
   memory fields, match counts, and dataset labels are checked.
+- The CLI benchmark output is checked for its ASCII sectioned tables,
+  correctness summaries, and an 80-column maximum line width.
 - The interactive menu is exercised with scripted input across all 11
   remaining modules: DNA
   statistics, FASTA loading, sorting/searching, divide-and-conquer, greedy,
@@ -210,7 +212,7 @@ multiplication.
   the capacity-shock demo is checked for both capacity cases; the stress demo
   runs the deterministic million-byte text and 512-record sort, verifies all
   twelve string-search benchmark records and prints their timings.
-- The suite contains 107 test groups in total. CTest runs the test executable
+- The suite contains 108 test groups in total. CTest runs the test executable
   from the project root so the bundled sample FASTA path is stable.
 - Wall-clock durations are displayed but are not compared to fixed
   thresholds. Benchmark memory reports distinguish measured returned-result
